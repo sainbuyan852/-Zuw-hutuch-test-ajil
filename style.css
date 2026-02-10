@@ -1,12 +1,12 @@
-body{
+body {
   margin: 0;
+  padding: 0;
   min-height: 100vh;
 
   background-image: url("bg-blue-orange-gradient.png");
-  background-size: cover;          /* дэлгэцийг дүүргэнэ */
-  background-position: center;     /* голлуулна */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;    /* scroll хийхэд background хөдөлгөхгүй */
 }
 
 
@@ -50,4 +50,5 @@ button:hover {
   font-weight: bold;
   margin-top: 20px;
 }
+
 
