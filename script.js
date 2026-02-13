@@ -71,10 +71,20 @@ function submitQuiz() {
 }
 
 function retryQuiz() {
-  document.querySelectorAll('input[type="radio"]').forEach((r) => (r.checked = false));
+  // 1 удаа л зөвшөөрнө
+  if (retryUsed) return;
+
+  retryUsed = true;
+  sessionStorage.setItem("retryUsed", "1");
+
+  document.querySelectorAll('input[type="radio"]').forEach(r => (r.checked = false));
+
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = "";
   resultDiv.className = "";
+
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+
 
