@@ -1,4 +1,4 @@
-let retryUsed = sessionStorage.getItem("retryUsed") === "1";
+let attempt = Number(sessionStorage.getItem("attempt") || "1");
 //
 const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbw3cmVFVKlU2umR0A88ER1w43XuusjWN4vmXOtWZPio7oMsAmz-LngLiGuVmfykw3M/exec";
@@ -12,6 +12,7 @@ function submitQuiz() {
 
   if (!company) return alert("Албан байгууллагаа бичнэ үү.");
   if (!name) return alert("Нэрээ бичнэ үү.");
+  if (!phone) return alert("Дугаараа бичнэ үү.");
 
   for (let i = 1; i <= totalQuestions; i++) {
     const ans = document.querySelector(`input[name="q${i}"]:checked`);
@@ -21,13 +22,14 @@ function submitQuiz() {
   let score = 0;
   for (let i = 1; i <= totalQuestions; i++) {
     const ans = document.querySelector(`input[name="q${i}"]:checked`);
-    score += Number(ans.value); // зөв = 1, буруу = 0
+   score += parseInt(ans?.value || "0", 10);
   }
 
   const percent = Math.round((score / totalQuestions) * 100);
   const passed = percent >= passPercent;
 
   const resultDiv = document.getElementById("result");
+  
   if (passed) {
     resultDiv.className = "result-pass";
     resultDiv.innerHTML =
@@ -50,14 +52,13 @@ function submitQuiz() {
 }
 
 
-  const form = new URLSearchParams();
+const form = new URLSearchParams();
   form.append("company", company);
   form.append("name", name);
   form.append("score", String(score));
   form.append("percent", String(percent));
   form.append("result", passed ? "ТЭНЦСЭН" : "ТЭНЦЭЭГҮЙ");
-
-  // form.append("ua", navigator.userAgent);
+  form.append("attempt", String(attempt));
 
   fetch(WEB_APP_URL, {
     method: "POST",
@@ -71,11 +72,11 @@ function submitQuiz() {
 }
 
 function retryQuiz() {
-  // 1 удаа л зөвшөөрнө
-  if (retryUsed) return;
+  // 1 удаа л дахин өгнө
+  if (attempt >= 2) return;
 
-  retryUsed = true;
-  sessionStorage.setItem("retryUsed", "1");
+  attempt = 2;
+  sessionStorage.setItem("attempt", "2");
 
   document.querySelectorAll('input[type="radio"]').forEach(r => (r.checked = false));
 
